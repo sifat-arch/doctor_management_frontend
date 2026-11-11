@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🩺 Doctor Tracker — Modern Web Client (Frontend)
 
-## Getting Started
+> **High-Performance Clinical Management & Telemetry Portal** built with **Next.js 15 (App Router)**, **TypeScript**, **TanStack Query v5**, **React Hook Form**, **Zod**, and **Tailwind CSS**. Designed with an ultra-clean **Monochrome / Black & White** aesthetic.
 
-First, run the development server:
+---
 
+## 🎨 Design Philosophy & Theme
+
+- **Palette:** Minimalist High-Contrast Black & White (`#000000`, `#ffffff`, subtle `#f4f4f5` neutral accents, and crisp `#e4e4e7` zinc borders).
+- **Component Styling:** Custom-crafted beyond default shadcn primitives — micro-interactions, sleek rounded corners (`rounded-xl` / `rounded-2xl`), subtle drop shadows (`shadow-xs`), refined table typography, and interactive button active states.
+- **Data Visualization:** High-clarity monochrome charts via **Recharts** (Area flow gradients, horizontal workload bars, and diagnosis distribution meters).
+
+---
+
+## 🚀 Key Features
+
+### 1. 🔐 Authentication & Session Security
+- Dedicated login page at `/login` with real-time Zod schema validation.
+- One-click demo credential fillers (`Admin` / `Staff`) for rapid evaluation.
+- Cookie & localStorage token synchronization.
+- Next.js Edge Middleware route guarding for automatic redirects between `/login` and protected dashboard paths.
+
+### 2. 📊 Clinical Intelligence Dashboard (`/`)
+- **Metric Cards:** Real-time counts for Active Doctors, Registered Patients, and System Personnel.
+- **Patient Registration Flow Chart:** Monthly admission trends across recent months with custom dark tooltips.
+- **Specialist Workload Bar Chart:** Patient distribution breakdown per physician.
+- **Disease Distribution Breakdown:** Diagnosis progress meters and percentage telemetry.
+
+### 3. 🩺 Medical Specialists Directory (`/doctors` & `/doctors/[id]`)
+- Real-time search across doctor name, medical specialty, and chamber location.
+- Register new doctors and update profiles with validation.
+- Delete doctors with custom confirmation dialogs.
+- Detailed single physician page (`/doctors/[id]`) displaying:
+  - Doctor credentials and contact information.
+  - Sub-table of patients assigned exclusively to that physician.
+  - Ability to admit new patients directly under that doctor.
+
+### 4. 🏥 Dedicated Patient Registry (`/patients`)
+- Server-side pagination with controls (Previous, Next, Page X of Y, Total records).
+- Instant search filter by patient name or diagnosis.
+- Dual dropdown filters: filter by Medical Diagnosis and filter by Assigned Specialist.
+- Admit new patient modal dialog with dynamic doctor picker.
+- Discharge / delete patient with confirmation modal.
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js 15 (App Router, Turbopack)
+- **Language:** TypeScript 5
+- **Data Fetching & Cache:** TanStack Query (React Query v5)
+- **Forms & Validation:** React Hook Form + Zod
+- **Icons:** Lucide React
+- **Charts:** Recharts
+- **Toast Notifications:** Sonner
+- **HTTP Client:** Axios with response interceptors
+- **Styling:** Tailwind CSS + Radix UI Primitives
+
+---
+
+## 📦 Getting Started
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment
+Create a `.env.local` file:
+```env
+NEXT_PUBLIC_API_URL=https://doctormanagementbackend.vercel.app/api/v1
+NEXT_PUBLIC_APP_NAME="Doctor Tracker"
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Build for Production
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔑 Demo Credentials
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin@doctortracker.com` | `Admin@123456` |
+| **Staff** | `staff@doctortracker.com` | `Staff@123456` |
