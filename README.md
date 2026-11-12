@@ -16,7 +16,7 @@
 
 ### 1. 🔐 Authentication & Session Security
 - Dedicated login page at `/login` with real-time Zod schema validation.
-- One-click demo credential fillers (`Admin` / `Staff`) for rapid evaluation.
+- One-click demo credential filler (`Admin`) for rapid evaluation.
 - Cookie & localStorage token synchronization.
 - Next.js Edge Middleware route guarding for automatic redirects between `/login` and protected dashboard paths.
 
@@ -90,4 +90,3 @@ npm start
 | Role | Email | Password |
 | :--- | :--- | :--- |
 | **Admin** | `admin@doctortracker.com` | `Admin@123456` |
-| **Staff** | `staff@doctortracker.com` | `Staff@123456` |
