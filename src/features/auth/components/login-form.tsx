@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Lock, Mail, Loader2, Stethoscope, ShieldCheck, UserCheck } from "lucide-react";
+import { Lock, Mail, Loader2, Stethoscope, ShieldCheck } from "lucide-react";
 import { loginSchema, LoginFormValues } from "../schemas/login.schema";
 import { useAuth } from "../hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -33,11 +33,6 @@ export function LoginForm() {
   const setAdminCredentials = () => {
     setValue("email", "admin@doctortracker.com", { shouldValidate: true });
     setValue("password", "Admin@123456", { shouldValidate: true });
-  };
-
-  const setStaffCredentials = () => {
-    setValue("email", "staff@doctortracker.com", { shouldValidate: true });
-    setValue("password", "Staff@123456", { shouldValidate: true });
   };
 
   return (
@@ -113,24 +108,14 @@ export function LoginForm() {
         <p className="mb-3 text-center text-[10px] font-semibold tracking-widest uppercase text-zinc-400">
           Quick Demo Credentials
         </p>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={setAdminCredentials}
-            className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-black"
-          >
-            <ShieldCheck className="h-3.5 w-3.5 text-zinc-900" />
-            Admin Account
-          </button>
-          <button
-            type="button"
-            onClick={setStaffCredentials}
-            className="flex items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-black"
-          >
-            <UserCheck className="h-3.5 w-3.5 text-zinc-900" />
-            Staff Account
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={setAdminCredentials}
+          className="w-full flex items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50/80 px-3 py-2.5 text-xs font-semibold text-zinc-800 transition-colors hover:bg-zinc-100 hover:text-black"
+        >
+          <ShieldCheck className="h-4 w-4 text-zinc-900" />
+          Auto-fill Admin Demo Credentials
+        </button>
       </div>
     </div>
   );

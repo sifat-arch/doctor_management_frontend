@@ -1,18 +1,71 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Plus, Stethoscope, RefreshCw } from "lucide-react";
+import {
+  Search,
+  Plus,
+  RefreshCw,
+  Filter,
+  Calendar,
+  ArrowUpDown,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DoctorTable } from "@/features/doctors/components/doctor-table";
 import { DoctorFormDialog } from "@/features/doctors/components/doctor-form-dialog";
-import { useDoctors } from "@/features/doctors/hooks/use-doctors";
+import { usePaginatedDoctors } from "@/features/doctors/hooks/use-doctors";
+
+const SPECIALIZATIONS = [
+  "Cardiology",
+  "Neurology",
+  "Pediatrics",
+  "Orthopedics",
+  "Dermatology",
+  "Oncology",
+  "Gastroenterology",
+  "General Surgery",
+  "Nephrology",
+  "Psychiatry",
+];
 
 export default function DoctorsPage() {
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [specialization, setSpecialization] = useState("all");
+  const [dateSort, setDateSort] = useState<"desc" | "asc">("desc");
   const [formDialogOpen, setFormDialogOpen] = useState(false);
-  const { data: doctors, isLoading, refetch, isRefetching } = useDoctors(search);
+
+  const {
+    data: doctorsData,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = usePaginatedDoctors({
+    page,
+    limit: 8,
+    search,
+    specialization,
+    sortBy: "createdAt",
+    sortOrder: dateSort,
+  });
+
+  const handleResetFilters = () => {
+    setSearch("");
+    setSpecialization("all");
+    setDateSort("desc");
+    setPage(1);
+  };
+
+  const hasActiveFilters =
+    search.trim() !== "" || specialization !== "all" || dateSort !== "desc";
 
   return (
     <div className="space-y-6">
@@ -24,11 +77,13 @@ export default function DoctorsPage() {
               Medical Specialists Directory
             </h2>
             <Badge variant="subtle" className="text-xs">
-              {doctors ? `${doctors.length} Doctors` : "Loading..."}
+              {doctorsData?.meta?.total !== undefined
+                ? `${doctorsData.meta.total} Registered`
+                : "Loading..."}
             </Badge>
           </div>
           <p className="mt-1 text-xs text-zinc-500">
-            View, search, edit clinical credentials, and manage doctors across hospital chambers.
+            View, search, filter by specialization and registration date, and manage doctor credentials across hospital chambers.
           </p>
         </div>
 
@@ -58,30 +113,87 @@ export default function DoctorsPage() {
       </div>
 
       {/* Filter / Search Toolbar */}
-      <div className="flex items-center gap-3 rounded-xl border border-zinc-200/90 bg-white p-3 shadow-xs">
-        <div className="flex-1 max-w-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-xs">
+        {/* Search Input */}
+        <div className="lg:col-span-2">
           <Input
             placeholder="Search by name, specialization, or chamber location..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             icon={<Search className="h-4 w-4" />}
             className="h-9 text-xs"
           />
         </div>
-        {search && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSearch("")}
-            className="h-8 text-xs text-zinc-500 hover:text-black"
+
+        {/* Specialization Filter */}
+        <div>
+          <Select
+            value={specialization}
+            onValueChange={(val) => {
+              setSpecialization(val);
+              setPage(1);
+            }}
           >
-            Clear Search
-          </Button>
-        )}
+            <SelectTrigger className="h-9 text-xs">
+              <SelectValue placeholder="All Specializations" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Specializations</SelectItem>
+              {SPECIALIZATIONS.map((spec) => (
+                <SelectItem key={spec} value={spec}>
+                  {spec}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Date Sort Filter */}
+        <div>
+          <Select
+            value={dateSort}
+            onValueChange={(val: "desc" | "asc") => {
+              setDateSort(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="h-9 text-xs">
+              <SelectValue placeholder="Sort by Date" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Date: Newest First</SelectItem>
+              <SelectItem value="asc">Date: Oldest First</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Doctors Table */}
-      <DoctorTable doctors={doctors} isLoading={isLoading} />
+      {/* Active Filter Indicators */}
+      {hasActiveFilters && (
+        <div className="flex items-center justify-between text-xs text-zinc-500 px-1">
+          <div className="flex items-center gap-1.5">
+            <Filter className="h-3.5 w-3.5 text-zinc-400" />
+            <span>Active filters applied</span>
+          </div>
+          <button
+            onClick={handleResetFilters}
+            className="font-medium text-black hover:underline cursor-pointer"
+          >
+            Reset Filters
+          </button>
+        </div>
+      )}
+
+      {/* Doctors Table with Pagination */}
+      <DoctorTable
+        doctors={doctorsData?.doctors}
+        isLoading={isLoading}
+        meta={doctorsData?.meta}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
 
       {/* Register Doctor Dialog */}
       <DoctorFormDialog

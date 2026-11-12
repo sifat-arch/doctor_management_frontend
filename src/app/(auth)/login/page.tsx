@@ -4,7 +4,7 @@ import { LoginForm } from "@/features/auth/components/login-form";
 
 export const metadata: Metadata = {
   title: "Sign In — Doctor Tracker",
-  description: "Secure login for clinical administrators and medical staff.",
+  description: "Secure login for clinical administrators.",
 };
 
 export default function LoginPage() {

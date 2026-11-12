@@ -9,7 +9,6 @@ import {
   Users,
   LogOut,
   ShieldCheck,
-  UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/features/auth/hooks/use-auth";
@@ -102,18 +101,14 @@ export function Sidebar() {
         <div className="flex items-center justify-between rounded-xl bg-zinc-50 border border-zinc-200/80 p-3">
           <div className="min-w-0 pr-2">
             <div className="flex items-center gap-1.5">
-              {currentUser?.role === "admin" ? (
-                <ShieldCheck className="h-3.5 w-3.5 text-black shrink-0" />
-              ) : (
-                <UserCheck className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
-              )}
+              <ShieldCheck className="h-3.5 w-3.5 text-black shrink-0" />
               <span className="font-semibold text-xs text-zinc-900 truncate block">
                 {currentUser?.email || "Authenticated User"}
               </span>
             </div>
             <div className="mt-1">
               <Badge variant="subtle" className="text-[10px] uppercase font-mono py-0">
-                {currentUser?.role || "Admin"}
+                Admin
               </Badge>
             </div>
           </div>

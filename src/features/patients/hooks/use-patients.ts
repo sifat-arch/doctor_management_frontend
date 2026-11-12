@@ -12,44 +12,53 @@ interface UsePatientsParams {
   search?: string;
   condition?: string;
   doctorId?: string;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 export function usePatients(params: UsePatientsParams = {}) {
-  const { page = 1, limit = 10, search, condition, doctorId } = params;
+  const {
+    page = 1,
+    limit = 10,
+    search,
+    condition,
+    doctorId,
+    startDate,
+    endDate,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+  } = params;
 
   return useQuery({
-    queryKey: ["patients", { page, limit, search, condition, doctorId }],
+    queryKey: [
+      "patients",
+      { page, limit, search, condition, doctorId, startDate, endDate, sortBy, sortOrder },
+    ],
     queryFn: async () => {
       const queryParams = new URLSearchParams();
       queryParams.set("page", String(page));
       queryParams.set("limit", String(limit));
       if (search && search.trim()) queryParams.set("search", search.trim());
+      if (condition && condition !== "all") queryParams.set("condition", condition);
+      if (doctorId && doctorId !== "all") queryParams.set("doctorId", doctorId);
+      if (startDate) queryParams.set("startDate", startDate);
+      if (endDate) queryParams.set("endDate", endDate);
+      if (sortBy) queryParams.set("sortBy", sortBy);
+      if (sortOrder) queryParams.set("sortOrder", sortOrder);
 
       const res = await apiClient.get<ApiResponse<IPatient[]>>(
         `/patients?${queryParams.toString()}`
       );
 
-      let data = res.data.data;
-      let total = res.data.meta?.total || data.length;
-
-      // Client-side filtering for condition or doctor if backend doesn't take them as query params
-      if (condition && condition !== "all") {
-        data = data.filter((p) => p.condition.toLowerCase() === condition.toLowerCase());
-      }
-      if (doctorId && doctorId !== "all") {
-        data = data.filter((p) => {
-          const docId = typeof p.doctor === "object" ? p.doctor?._id : p.doctor;
-          return docId === doctorId;
-        });
-      }
-
       return {
-        patients: data,
-        meta: {
-          page: res.data.meta?.page || page,
-          limit: res.data.meta?.limit || limit,
-          total: total,
-          totalPages: res.data.meta?.totalPages || Math.ceil(total / limit),
+        patients: res.data.data,
+        meta: res.data.meta || {
+          page,
+          limit,
+          total: res.data.data.length,
+          totalPages: Math.ceil(res.data.data.length / limit),
         },
       };
     },

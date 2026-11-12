@@ -11,7 +11,7 @@ import { LoginFormValues } from "../schemas/login.schema";
 interface LoginResponseData {
   _id: string;
   email: string;
-  role: "admin" | "staff";
+  role: "admin";
   token: string;
 }
 

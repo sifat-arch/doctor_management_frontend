@@ -84,7 +84,7 @@ export default function DashboardPage() {
         <MetricCard
           title="System Personnel"
           value={summary?.totalUsers}
-          subtitle="Admins and clinical staff members"
+          subtitle="Active clinical administrators"
           icon={<ShieldCheck className="h-4.5 w-4.5" />}
           isLoading={isLoadingSummary}
         />

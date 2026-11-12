@@ -12,6 +12,8 @@ import {
   Mail,
   Phone,
   Stethoscope,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   Table,
@@ -39,9 +41,21 @@ import { DoctorDeleteDialog } from "./doctor-delete-dialog";
 interface DoctorTableProps {
   doctors: IDoctor[] | undefined;
   isLoading: boolean;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
 }
 
-export function DoctorTable({ doctors, isLoading }: DoctorTableProps) {
+export function DoctorTable({
+  doctors,
+  isLoading,
+  meta,
+  onPageChange,
+}: DoctorTableProps) {
   const [selectedDoctor, setSelectedDoctor] = useState<IDoctor | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -195,6 +209,51 @@ export function DoctorTable({ doctors, isLoading }: DoctorTableProps) {
           ))}
         </TableBody>
       </Table>
+
+      {/* Pagination Controls */}
+      {meta && meta.totalPages > 1 && (
+        <div className="flex items-center justify-between border-t border-zinc-200/80 px-2 py-4 text-xs text-zinc-500">
+          <div>
+            Showing{" "}
+            <strong className="text-zinc-900 font-semibold">
+              {(meta.page - 1) * meta.limit + 1}
+            </strong>{" "}
+            to{" "}
+            <strong className="text-zinc-900 font-semibold">
+              {Math.min(meta.page * meta.limit, meta.total)}
+            </strong>{" "}
+            of{" "}
+            <strong className="text-zinc-900 font-semibold">{meta.total}</strong>{" "}
+            doctors
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={meta.page <= 1}
+              onClick={() => onPageChange && onPageChange(meta.page - 1)}
+              className="h-8 px-2.5 gap-1 text-xs"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              Previous
+            </Button>
+            <span className="text-xs font-medium text-zinc-700">
+              Page {meta.page} of {meta.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={meta.page >= meta.totalPages}
+              onClick={() => onPageChange && onPageChange(meta.page + 1)}
+              className="h-8 px-2.5 gap-1 text-xs"
+            >
+              Next
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       <DoctorFormDialog
         open={editDialogOpen}

@@ -29,6 +29,7 @@ export default function PatientsPage() {
   const [search, setSearch] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("all");
   const [selectedDoctor, setSelectedDoctor] = useState("all");
+  const [dateSort, setDateSort] = useState<"desc" | "asc">("desc");
   const [formDialogOpen, setFormDialogOpen] = useState(false);
 
   const { data: doctors } = useDoctors();
@@ -45,19 +46,23 @@ export default function PatientsPage() {
     search,
     condition: selectedCondition,
     doctorId: selectedDoctor,
+    sortBy: "createdAt",
+    sortOrder: dateSort,
   });
 
   const handleResetFilters = () => {
     setSearch("");
     setSelectedCondition("all");
     setSelectedDoctor("all");
+    setDateSort("desc");
     setPage(1);
   };
 
   const hasActiveFilters =
     search.trim() !== "" ||
     selectedCondition !== "all" ||
-    selectedDoctor !== "all";
+    selectedDoctor !== "all" ||
+    dateSort !== "desc";
 
   return (
     <div className="space-y-6">
@@ -107,9 +112,9 @@ export default function PatientsPage() {
       {/* Filter / Search Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-xs">
         {/* Search Input */}
-        <div className="lg:col-span-2">
+        <div>
           <Input
-            placeholder="Search by patient name or diagnosis..."
+            placeholder="Search by name or diagnosis..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -162,6 +167,25 @@ export default function PatientsPage() {
                   {d.name}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Date Sort Filter */}
+        <div>
+          <Select
+            value={dateSort}
+            onValueChange={(val: "desc" | "asc") => {
+              setDateSort(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="h-9 text-xs">
+              <SelectValue placeholder="Sort by Date" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Date: Newest First</SelectItem>
+              <SelectItem value="asc">Date: Oldest First</SelectItem>
             </SelectContent>
           </Select>
         </div>

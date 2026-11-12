@@ -6,6 +6,65 @@ import { apiClient } from "@/lib/api-client";
 import { ApiResponse, IDoctor, IPatient } from "@/types";
 import { DoctorFormValues } from "../schemas/doctor.schema";
 
+export interface UseDoctorsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  specialization?: string;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export function usePaginatedDoctors(params: UseDoctorsParams = {}) {
+  const {
+    page = 1,
+    limit = 8,
+    search,
+    specialization,
+    startDate,
+    endDate,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+  } = params;
+
+  return useQuery({
+    queryKey: [
+      "doctors",
+      "paginated",
+      { page, limit, search, specialization, startDate, endDate, sortBy, sortOrder },
+    ],
+    queryFn: async () => {
+      const queryParams = new URLSearchParams();
+      queryParams.set("page", String(page));
+      queryParams.set("limit", String(limit));
+      if (search && search.trim()) queryParams.set("search", search.trim());
+      if (specialization && specialization !== "all") {
+        queryParams.set("specialization", specialization);
+      }
+      if (startDate) queryParams.set("startDate", startDate);
+      if (endDate) queryParams.set("endDate", endDate);
+      if (sortBy) queryParams.set("sortBy", sortBy);
+      if (sortOrder) queryParams.set("sortOrder", sortOrder);
+
+      const res = await apiClient.get<ApiResponse<IDoctor[]>>(
+        `/doctors?${queryParams.toString()}`
+      );
+
+      return {
+        doctors: res.data.data,
+        meta: res.data.meta || {
+          page,
+          limit,
+          total: res.data.data.length,
+          totalPages: Math.ceil(res.data.data.length / limit),
+        },
+      };
+    },
+  });
+}
+
 export function useDoctors(search?: string) {
   return useQuery({
     queryKey: ["doctors", { search }],

@@ -10,7 +10,7 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-export type UserRole = "admin" | "staff";
+export type UserRole = "admin";
 
 export interface IUser {
   _id: string;

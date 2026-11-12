@@ -15,7 +15,7 @@
 ## 1. 🎯 Project Overview & Objectives
 
 ### 1.1 Executive Summary
-**Doctor Tracker** is an enterprise-grade administrative web application designed for healthcare facilities, clinic administrators, and medical staff to manage doctor directories, patient records, and real-time clinical workload analytics. The frontend prioritizes a clean, high-performance, and visually appealing user experience (UX) with responsive layouts, accessible UI components, and real-time chart data visualization.
+**Doctor Tracker** is an enterprise-grade administrative web application designed for healthcare facilities and clinic administrators to manage doctor directories, patient records, and real-time clinical workload analytics. The frontend prioritizes a clean, high-performance, and visually appealing user experience (UX) with responsive layouts, accessible UI components, and real-time chart data visualization.
 
 ### 1.2 Core Objectives
 - **Secure Access:** Strict role-based protected navigation using Next.js Middleware and HTTP-only cookies / JWT authentication.
@@ -140,7 +140,7 @@ doctor_management_frontend/
 - **Metric Cards (Top Row):**
   - Total Doctors (Icon: `Stethoscope`, Trend indicator)
   - Total Patients (Icon: `Users`, Trend indicator)
-  - Active Admins / Staff (Icon: `ShieldCheck`)
+  - Active Administrators (Icon: `ShieldCheck`)
 - **Visual Chart 1: Patient Registration Trend (Area / Line Chart)**
   - Month-over-month admission flow (`2026-07` to `2026-11`).
   - Interactive tooltip displaying patient count.
